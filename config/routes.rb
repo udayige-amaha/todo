@@ -13,7 +13,9 @@ Rails.application.routes.draw do
     end
 
   namespace :v2 do
-    resources :users
+    resources :users do
+      resources :tasks
+    end
   end
   end
 end

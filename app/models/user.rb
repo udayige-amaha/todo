@@ -1,4 +1,5 @@
 class User < ApplicationRecord
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  has_many :tasks, dependent: :destroy
+
+  validates :first_name, :last_name, presence: true
 end
