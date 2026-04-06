@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  # handle response not found
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   private
