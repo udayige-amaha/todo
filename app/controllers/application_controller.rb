@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include PaginationHelper
+
   # handle response not found
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
