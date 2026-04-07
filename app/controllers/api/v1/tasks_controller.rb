@@ -15,7 +15,7 @@ class Api::V1::TasksController < ApplicationController
     if @task.save
       render json: @task, status: :created
     else
-      render json: @task.errors, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -23,7 +23,7 @@ class Api::V1::TasksController < ApplicationController
     if @task.update(task_params)
       render json: @task
     else
-      render json: @task.errors, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

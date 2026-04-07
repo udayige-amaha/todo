@@ -10,11 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_06_050340) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_07_074247) do
   create_table "tasks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.boolean "completed"
+    t.boolean "completed", default: false
     t.datetime "created_at", null: false
-    t.string "title"
+    t.datetime "due_date"
+    t.integer "priority", default: 0, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["due_date"], name: "index_tasks_on_due_date"
+    t.index ["priority"], name: "index_tasks_on_priority"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
+  end
+
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "tasks", "users"
 end
