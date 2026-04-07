@@ -16,7 +16,8 @@ class Api::V2::TasksController < ApplicationController
 
     render json: {
       tasks: pagination_data[:records],
-      **(task_count > 3 ? pagination_data[:meta] : {})
+      meta: pagination_data[:meta]
+      # **(task_count > 3 ? pagination_data[:meta] : {}) # conditionally include metadata
     }
   end
 
