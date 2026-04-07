@@ -3,11 +3,20 @@ class Api::V2::TasksController < ApplicationController
   before_action :set_task, only: [ :show, :update, :destroy ]
 
   def index
-    pagination_data = pagination(@user.tasks, 4)
+    tasks = @user.tasks
+
+    tasks = tasks.by_priority_level(params[:priority]) if params[:priority].present?
+    tasks = tasks.by_due_date if params[:sort] == "due_date"
+    tasks = tasks.by_priority if params[:sort] == "priority"
+    tasks = tasks.completed(params[:completed])
+    tasks = tasks.overdue if params[:overdue] == "true"
+
+    pagination_data = pagination(tasks, 4)
+    task_count = pagination_data[:records].count
 
     render json: {
       tasks: pagination_data[:records],
-      meta: pagination_data[:meta]
+      **(task_count > 3 ? pagination_data[:meta] : {})
     }
   end
 
@@ -48,6 +57,6 @@ class Api::V2::TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :completed)
+    params.require(:task).permit(:title, :completed, :priority, :due_date)
   end
 end
