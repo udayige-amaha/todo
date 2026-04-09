@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resources :tasks
 
     resources :profile, only: %i[ show update destroy ], controller: "users"
+
+    get "news", to: "news#index"
   end
   end
 end
