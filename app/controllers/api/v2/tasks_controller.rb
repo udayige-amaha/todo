@@ -1,9 +1,8 @@
 class Api::V2::TasksController < ApplicationController
-  before_action :set_user
   before_action :set_task, only: [ :show, :update, :destroy ]
 
   def index
-    tasks = @user.tasks
+    tasks = current_user.tasks
 
     tasks = tasks.by_priority_level(params[:priority]) if params[:priority].present?
     tasks = tasks.by_due_date if params[:sort] == "due_date"
@@ -12,7 +11,6 @@ class Api::V2::TasksController < ApplicationController
     tasks = tasks.overdue if params[:overdue] == "true"
 
     pagination_data = pagination(tasks, 4)
-    task_count = pagination_data[:records].count
 
     render json: {
       tasks: pagination_data[:records],
@@ -26,7 +24,7 @@ class Api::V2::TasksController < ApplicationController
   end
 
   def create
-    @task = @user.tasks.build(task_params)
+    @task = current_user.tasks.build(task_params)
     if @task.save
       render json: @task, status: :created
     else
@@ -49,12 +47,8 @@ class Api::V2::TasksController < ApplicationController
 
   private
 
-  def set_user
-    @user = User.find(params[:user_id])
-  end
-
   def set_task
-    @task = @user.tasks.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def task_params
