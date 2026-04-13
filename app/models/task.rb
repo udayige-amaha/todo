@@ -12,4 +12,11 @@ class Task < ApplicationRecord
   scope :by_priority_level, ->(level) { where(priority: level) if level.present? }
   scope :completed, ->(status) { where(completed: status) if status.present? }
   scope :overdue, -> { where("due_date < ? AND completed = ?", Time.current, false) }
+
+  after_commit :schedule_reminder, on: :create
+
+  private
+  def schedule_reminder
+    TaskReminderJob.perform_in(10.seconds, self.id)
+  end
 end
