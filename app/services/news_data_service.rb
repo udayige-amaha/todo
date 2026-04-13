@@ -46,9 +46,19 @@ class NewsDataService
 
     case response.code.to_i
     when 200
+      data = JSON.parse(response.body)
+      articles = data["results"] || []
+      articles.each do |article|
+        NewsArticle.find_or_create_by(url: article["link"]) do |news_article|
+          news_article.title = article["title"]
+          news_article.description = article["description"]
+          news_article.published_at = article["pubDate"]
+          news_article.query = @query
+        end
+      end
       {
         success: true,
-        data: JSON.parse(response.body)
+        data: data
       }
     when 401
       { error: "Unauthorized: Invalid API key" }
