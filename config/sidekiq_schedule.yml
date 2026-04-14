@@ -1,0 +1,4 @@
+daily_task_cleaner:
+  cron: "0 0 * * *" # Every day at midnight
+  class: "CleanCompletedTasksJob"
+  queue: default
