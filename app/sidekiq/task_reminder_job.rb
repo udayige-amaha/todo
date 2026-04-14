@@ -6,6 +6,6 @@ class TaskReminderJob
 
     return unless task && !task.completed?
 
-    puts "Reminder: Task '#{task.title}' is due on #{task.due_date.strftime('%Y-%m-%d %H:%M:%S')}"
+    puts "Reminder: Task '#{task.title}' is due on #{task.due_date.strftime('%A %B %d, %Y at %I:%M %p')}"
   end
 end
