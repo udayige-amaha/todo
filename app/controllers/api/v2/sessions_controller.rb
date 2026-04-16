@@ -8,9 +8,8 @@ class Api::V2::SessionsController < ApplicationController
         user: {
           email: @user.email,
           authentication_token: @user.authentication_token
-        },
-        status: :ok
-      }
+        }
+      }, status: :ok
     else
       render json: { errors: [ "Invalid email or password" ] }, status: :unauthorized
     end

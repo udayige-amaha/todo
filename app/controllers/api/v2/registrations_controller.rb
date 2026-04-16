@@ -9,8 +9,10 @@ class Api::V2::RegistrationsController < ApplicationController
           email: @user.email,
           authentication_token: @user.authentication_token
         },
-        status: :created
-      }
+        status: {
+          message: "User created successfully"
+        }
+      }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
