@@ -13,15 +13,19 @@ Rails.application.routes.draw do
       resources :tasks
     end
 
-  namespace :v2 do
-    post "signup", to: "registrations#create"
-    post "login", to: "sessions#create"
+    namespace :v2 do
+      post "signup", to: "registrations#create"
+      post "login", to: "sessions#create"
 
-    resources :tasks
+      resources :tasks
 
-    resources :profile, only: %i[ show update destroy ], controller: "users"
+      resources :profile, only: %i[ show update destroy ], controller: "users"
 
-    get "news", to: "news#index"
-  end
+      get "news", to: "news#index"
+    end
+
+    namespace :v3 do
+      resources :tasks
+    end
   end
 end
