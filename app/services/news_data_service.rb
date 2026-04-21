@@ -3,17 +3,25 @@ require "json"
 
 class NewsDataService
   BASE_URL = "https://newsdata.io/api/1/latest"
+  CACHE_TTL = 20.minutes
 
   def initialize(query:, country: "in")
-    @query = query if query.present?
+    @query = query if query.present? # or query.presence
     @country = country
     @api_key = Rails.application.credentials.dig(:news_data, :api_key)
   end
 
   def call
-    uri = build_uri
-    response = fetch_news_data(uri)
-    parse_response(response)
+    Rails.cache.fetch(cache_key, expires_in: CACHE_TTL) do
+      uri = build_uri
+      response = fetch_news_data(uri)
+      parse_response(response)
+    end
+  end
+
+  def cache_key
+    query_part = @query.present? ? @query.downcase.strip.gsub(/\s+/, "_") : "none"
+    "news/country:#{@country}/query:#{query_part}"
   end
 
   def build_uri
@@ -67,5 +75,10 @@ class NewsDataService
     else
       { error: "Unexpected response code: #{response.code}" }
     end
+  end
+
+  def self.clear_cache(query: nil, country: "in")
+    query_part = query.present? ? query.downcase.strip.gsub(/\s+/, "_") : "none"
+    Rails.cache.delete("news/country:#{country}/query:#{query_part}")
   end
 end
