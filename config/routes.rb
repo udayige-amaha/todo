@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -12,10 +13,27 @@ Rails.application.routes.draw do
       resources :tasks
     end
 
-  namespace :v2 do
-    resources :users do
+    namespace :v2 do
+      post "signup", to: "registrations#create"
+      post "login", to: "sessions#create"
+
       resources :tasks
+
+      resources :profile, only: %i[ show update destroy ], controller: "users"
+
+      get "news", to: "news#index"
     end
-  end
+
+    namespace :v3 do
+      resources :tasks do
+        member do
+          put :restore
+          delete :hard_destroy
+        end
+        collection do
+          get :trashed
+        end
+      end
+    end
   end
 end
