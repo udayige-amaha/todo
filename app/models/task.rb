@@ -1,10 +1,17 @@
 class Task < ApplicationRecord
+  include Discard::Model
+
+  audited
+
   belongs_to :user
 
   # Validations
   validates :title, presence: true, length: { minimum: 3 }
   validates :completed, inclusion: { in: [ true, false ] }
   validates :priority, inclusion: { in: 0..3 } # 0: Low, 1: Medium, 2: High, 3: Urgent
+
+  # Default scope: exclude soft-deleted records
+  default_scope -> { kept }
 
   # Scopes
   scope :by_priority, -> { order(priority: :desc) }

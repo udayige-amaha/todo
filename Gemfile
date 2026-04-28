@@ -61,3 +61,7 @@ end
 gem "sidekiq", "~> 8.1"
 
 gem "sidekiq-cron"
+
+gem "audited", "~> 5.7"
+
+gem "discard", "~> 1.4"

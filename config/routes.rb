@@ -25,7 +25,15 @@ Rails.application.routes.draw do
     end
 
     namespace :v3 do
-      resources :tasks
+      resources :tasks do
+        member do
+          put :restore
+          delete :hard_destroy
+        end
+        collection do
+          get :trashed
+        end
+      end
     end
   end
 end
