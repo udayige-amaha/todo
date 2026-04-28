@@ -12,11 +12,24 @@ class NewsDataService
   end
 
   def call
-    Rails.cache.fetch(cache_key, expires_in: CACHE_TTL) do
+    fetch_with_cache(cache_key, expires_in: CACHE_TTL) do
       uri = build_uri
       response = fetch_news_data(uri)
       parse_response(response)
     end
+  end
+
+  private
+
+  def fetch_with_cache(key, expires_in: CACHE_TTL)
+    cached_data = Rails.cache.read(key)
+    return cached_data if cached_data
+
+    result = yield
+
+    Rails.cache.write(key, result, expires_in: expires_in) if result[:success]
+
+    result
   end
 
   def cache_key
