@@ -1,6 +1,4 @@
 class Api::V2::NewsController < ApplicationController
-  before_action :authenticate_user_from_token!
-
   def index
     service = NewsDataService.new(query: params[:q], country: params[:country]  || "in")
     news_data = service.call
