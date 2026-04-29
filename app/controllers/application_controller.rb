@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   include PaginationHelper
   include DeviseTokenAuth::Concerns::SetUserByToken
 
-  before_action :authenticate_api_v2_user!, unless: :devise_controller?
+  before_action :authenticate_api_user!, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   # handle response not found
@@ -18,7 +18,7 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    current_api_v2_user
+    current_api_user
   end
 
   private
@@ -34,17 +34,4 @@ class ApplicationController < ActionController::API
   def record_invalid(exception)
     render json: { errors: exception.record.errors.full_messages }, status: :unprocessable_entity
   end
-
-  # def authenticate_user_from_token!
-  #   user_email = request.headers["X-User-Email"].presence
-  #   user_token = request.headers["X-User-Token"].presence
-
-  #   user = user_email && User.find_by(email: user_email)
-
-  #   if user && Devise.secure_compare(user.authentication_token, user_token)
-  #     @current_user = user
-  #   else
-  #     render json: { error: "Invalid email or token" }, status: :unauthorized
-  #   end
-  # end
 end

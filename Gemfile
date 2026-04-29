@@ -36,7 +36,7 @@ gem "image_processing", "~> 1.2"
 
 gem "redis", "~> 5.0"
 
-gem "devise"
+gem "devise", ">= 5.0.3"
 gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
