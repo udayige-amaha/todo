@@ -413,7 +413,7 @@ DEPENDENCIES
   brakeman
   bundler-audit
   debug
-  devise
+  devise (>= 5.0.3)
   devise_token_auth!
   discard (~> 1.4)
   factory_bot_rails
