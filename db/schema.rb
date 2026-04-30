@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_130147) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_29_125515) do
   create_table "audits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "action"
     t.integer "associated_id"
@@ -43,18 +43,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_130147) do
     t.string "url"
   end
 
+  create_table "statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "next_id"
+    t.bigint "previous_id"
+    t.bigint "statusable_id", null: false
+    t.string "statusable_type", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "updated_by", null: false
+    t.string "value", null: false
+    t.index ["next_id"], name: "index_statuses_on_next_id"
+    t.index ["previous_id"], name: "index_statuses_on_previous_id"
+    t.index ["statusable_type", "statusable_id"], name: "index_statuses_on_statusable"
+    t.index ["updated_by"], name: "fk_rails_239f1561e1"
+  end
+
   create_table "tasks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.boolean "completed", default: false
     t.datetime "created_at", null: false
     t.datetime "discarded_at"
     t.datetime "due_date"
     t.integer "priority", default: 0, null: false
+    t.bigint "status_id"
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["discarded_at"], name: "index_tasks_on_discarded_at"
     t.index ["due_date"], name: "index_tasks_on_due_date"
     t.index ["priority"], name: "index_tasks_on_priority"
+    t.index ["status_id"], name: "index_tasks_on_status_id"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
@@ -76,5 +93,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_130147) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "statuses", "statuses", column: "next_id"
+  add_foreign_key "statuses", "statuses", column: "previous_id"
+  add_foreign_key "statuses", "users", column: "updated_by"
+  add_foreign_key "tasks", "statuses"
   add_foreign_key "tasks", "users"
 end

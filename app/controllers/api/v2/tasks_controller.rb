@@ -41,14 +41,14 @@ class Api::V2::TasksController < ApplicationController
   end
 
   def destroy
-    @task.destroy
+    @task.discard
     head :no_content
   end
 
   private
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    @task = current_user.tasks.with_discarded.find(params[:id])
   end
 
   def task_params

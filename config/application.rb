@@ -32,6 +32,14 @@ module Todo
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
     config.active_job.queue_adapter = :sidekiq
+    config.active_record.yaml_column_permitted_classes = [
+      Symbol,
+      Time,
+      Date,
+      DateTime,
+      ActiveSupport::TimeWithZone,
+      ActiveSupport::TimeZone
+    ]
     config.generators do |g|
       g.test_framework :rspec
     end
