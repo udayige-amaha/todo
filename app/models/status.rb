@@ -10,7 +10,7 @@ class Status < ApplicationRecord
     message: "%{value} is not a valid status"
   }
 
-  scope :for_task, ->(task_id) { where(statusable_type: task_id) }
+  scope :for_task, ->(task) { where(statusable: task) }
 
   def forward_history
     list = [ self ]
